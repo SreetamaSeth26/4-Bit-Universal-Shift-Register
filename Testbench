@@ -1,0 +1,36 @@
+module tb;
+    reg clk, reset;
+    reg [1:0] sel;
+    reg sin_r, sin_l;
+    reg [3:0] d;
+    wire [3:0] q;
+    univ uut(clk, reset, sel, sin_r, sin_l, d, q);
+    always #5 clk = ~clk;
+
+    initial
+    begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, tb);
+
+        $monitor("Time=%0t Sel=%b D=%b Q=%b",$time, sel, d, q);
+
+        clk = 0;
+        reset = 1;
+        sel = 0;
+        sin_r = 0;
+        sin_l = 0;
+        d = 0;
+
+        
+        #10 reset = 0;
+        #10 sel = 2'b11; //PARALLEL LOAD
+            d = 4'b1011;
+        #10 sel = 2'b00; //HOLD
+        #10 sel = 2'b01; //SHIFT RIGHT
+            sin_r = 1;
+        #10 sel = 2'b10; //SHIFT LEFT
+            sin_l = 0;
+
+        #20 $finish;
+    end
+endmodule
