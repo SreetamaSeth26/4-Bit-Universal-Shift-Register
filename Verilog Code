@@ -1,0 +1,18 @@
+
+module univ(input clk,reset,input [1:0] sel,input sin_r,sin_l,input [3:0] d,output reg [3:0] q);
+  always@(posedge clk)
+    begin
+      if(reset)
+        q<=0;
+      else
+        begin
+        case(sel)
+          
+            2'b00: q<=q;
+            2'b01: q<={sin_r,q[3:1]};
+            2'b10: q<={q[2:0],sin_l};
+            2'b11: q<=d;
+        endcase
+        end
+    end
+endmodule
